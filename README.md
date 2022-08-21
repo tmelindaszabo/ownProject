@@ -1,1 +1,1 @@
-# ownProject
+# Mini Project
