@@ -1,6 +1,7 @@
 import { db } from '../data/connection';
 import { IAddBookRequest } from '../models/IAddBookRequest';
 import { IBookDomainModel } from '../models/IBookDomainModel';
+import { IBorrowedBook } from '../models/IBorrowedBook';
 import { IDbResultDataModel } from '../models/IDbResultDataModel';
 
 export const bookRepository = {
@@ -29,6 +30,13 @@ export const bookRepository = {
       ]
     );
     return newBook;
+  },
+
+  async updateBookOnBorrowingById(bookId: number) {
+    const borrowedBook = await db.query<any>(
+      `SELECT * FROM book WHERE id = ? AND numOfAllBook >= 1`,
+      [`${bookId}`]
+    );
   },
 
   async deleteBookById(id: string): Promise<number> {
