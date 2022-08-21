@@ -1,18 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import { expireDayForReadersCard } from '../config';
-//import { IRegistrationRequest } from '../models/IRegistrationRequest';
-
-export default interface IRegistrationRequest {
-  name: string;
-  username: string;
-  email: string;
-  password: string;
-  expDateOfReadersCard: number;
-  isAdmin: number;
-}
+import IRegistrationRequest from '../models/IRegistrationRequest';
+import { userService } from '../services/userService';
 
 export const userController = {
-  async registerUser(req: Request, res: Response, next: NextFunction) {
+  async registerUser(
+    req: Request<IRegistrationRequest>,
+    res: Response,
+    next: NextFunction
+  ) {
     function generateExpDateForReadersCard(): number {
       let now = new Date();
       return now.setDate(now.getDate() + expireDayForReadersCard);
@@ -20,8 +16,22 @@ export const userController = {
 
     const newRegistration: IRegistrationRequest = {
       ...req.body,
-      isAdmin: 1,
       expDateOfReadersCard: generateExpDateForReadersCard(),
+      isAdmin: 0,
     };
+
+    await userService
+      .register(newRegistration)
+      .then(() => {
+        return res.json({
+          status: 202,
+          message: 'Registration was successful',
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        next(err);
+        return;
+      });
   },
 };
