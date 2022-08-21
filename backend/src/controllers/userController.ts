@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { expireDayForReadersCard } from '../config';
+import { ILoginRequest } from '../models/ILoginRequest';
 import IRegistrationRequest from '../models/IRegistrationRequest';
 import { userService } from '../services/userService';
 
@@ -31,7 +32,35 @@ export const userController = {
       .catch((err) => {
         console.log(err);
         next(err);
-        return;
+        return res.status(400).send({
+          message: 'Registration failed',
+        });
+      });
+  },
+
+  async loginUser(
+    req: Request<ILoginRequest>,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    const user: ILoginRequest = {
+      ...req.body,
+    };
+
+    await userService
+      .login(user)
+      .then(() => {
+        return res.json({
+          status: 202,
+          message: 'Login was successful',
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        next(err);
+        return res.status(400).send({
+          message: 'Login failed',
+        });
       });
   },
 };

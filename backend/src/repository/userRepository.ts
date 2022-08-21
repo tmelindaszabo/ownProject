@@ -21,14 +21,14 @@ export const userRepository = {
     return newUser.insertId;
   },
 
-  async getUserByUsername(username: string): Promise<number> {
+  async getUserByUsername(
+    username: string
+  ): Promise<IRegistrationResultDataModel[]> {
     const user = await db.query<IRegistrationResultDataModel[]>(
       `SELECT * FROM user WHERE username = ?`,
       [username]
     );
-    if (user.length === 0) {
-      return 0;
-    }
-    return user.length;
+    console.log(user[0].password);
+    return user;
   },
 };
