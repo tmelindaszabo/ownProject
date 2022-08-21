@@ -12,8 +12,9 @@ apiRouter.post('/login', userController.loginUser);
 
 //book
 apiRouter.get('/books', bookController.getAllBooks);
-apiRouter.post('/book', bookController.addNewBook);
 apiRouter.get('/book/:id', bookController.getBookById);
+apiRouter.post('/book', bookController.addNewBook);
+
 apiRouter.delete('/book/:id', bookController.deleteBookById);
 
 export default apiRouter;
