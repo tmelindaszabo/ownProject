@@ -1,5 +1,6 @@
 import express from 'express';
 import { bookController } from '../controllers/bookController';
+import { borrowingController } from '../controllers/borrowingController';
 import helloController from '../controllers/helloController';
 import { userController } from '../controllers/userController';
 
@@ -18,5 +19,7 @@ apiRouter.post('/book', bookController.addNewBook);
 apiRouter.delete('/book/:id', bookController.deleteBookById);
 
 //borrowing
+apiRouter.post('/borrowing', borrowingController.newBorrow);
+apiRouter.put('/renewBorrowing', borrowingController.renewBorrowing);
 
 export default apiRouter;

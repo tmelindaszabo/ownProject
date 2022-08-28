@@ -1,7 +1,6 @@
 import { db } from '../data/connection';
 import { IAddBookRequest } from '../models/IAddBookRequest';
 import { IBookDomainModel } from '../models/IBookDomainModel';
-import { IBorrowedBook } from '../models/IBorrowedBook';
 import { IDbResultDataModel } from '../models/IDbResultDataModel';
 
 export const bookRepository = {
@@ -32,11 +31,18 @@ export const bookRepository = {
     return newBook;
   },
 
-  async updateBookOnBorrowingById(bookId: number) {
-    const borrowedBook = await db.query<any>(
-      `SELECT * FROM book WHERE id = ? AND numOfAllBook >= 1`,
+  async updateBookOnBorrowingById(bookId: number): Promise<number> {
+    const borrowedBook: IDbResultDataModel[] = await db.query<
+      IDbResultDataModel[]
+    >(`SELECT * FROM book WHERE id = ? AND numOfAllBook >= 1`, [`${bookId}`]);
+    if (borrowedBook.length === 0) {
+      return 0;
+    }
+    const newBorrowedBook = await db.query<IDbResultDataModel>(
+      `UPDATE book SET numOfAllBook = numOfAllBook - 1 WHERE id = ?`,
       [`${bookId}`]
     );
+    return newBorrowedBook.affectedRows;
   },
 
   async deleteBookById(id: string): Promise<number> {

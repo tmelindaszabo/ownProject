@@ -14,7 +14,7 @@ export const userRepository = {
         newRegistration.username,
         newRegistration.email,
         newRegistration.password,
-        `${newRegistration.expDateOfReadersCard}`,
+        newRegistration.expDateOfReadersCard,
         `${newRegistration.isAdmin}`,
       ]
     );
@@ -31,4 +31,10 @@ export const userRepository = {
     console.log(user[0].password);
     return user;
   },
+
+  // async isReadersCardValid(id: number): Promise<boolean> {
+  //   const readersCardExpDate: number = await db.query(`SELECT expDateOfReadersCard FROM user WHERE id = ?`, [`${id}`])
+
+  //   if(readersCardExpDate < )
+  // }
 };
