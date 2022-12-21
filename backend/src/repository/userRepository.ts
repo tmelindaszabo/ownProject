@@ -28,7 +28,6 @@ export const userRepository = {
       `SELECT * FROM user WHERE username = ?`,
       [username]
     );
-    console.log(user[0].password);
     return user;
   },
 

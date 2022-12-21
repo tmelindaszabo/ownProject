@@ -6,6 +6,7 @@ import { userRepository } from '../repository/userRepository';
 export const userService = {
   async register(registerUser: IRegistrationRequest): Promise<number> {
     const user = await userRepository.getUserByUsername(registerUser.username);
+    console.log('user.length: ', user.length);
     if (user.length > 0) {
       return Promise.reject({
         status: 400,
