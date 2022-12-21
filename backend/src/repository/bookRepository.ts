@@ -31,6 +31,20 @@ export const bookRepository = {
     return newBook;
   },
 
+  async updateBookOnBorrowingById(bookId: number): Promise<number> {
+    const borrowedBook: IDbResultDataModel[] = await db.query<
+      IDbResultDataModel[]
+    >(`SELECT * FROM book WHERE id = ? AND numOfAllBook >= 1`, [`${bookId}`]);
+    if (borrowedBook.length === 0) {
+      return 0;
+    }
+    const newBorrowedBook = await db.query<IDbResultDataModel>(
+      `UPDATE book SET numOfAllBook = numOfAllBook - 1 WHERE id = ?`,
+      [`${bookId}`]
+    );
+    return newBorrowedBook.affectedRows;
+  },
+
   async deleteBookById(id: string): Promise<number> {
     const deletedBook = await db.query<IDbResultDataModel>(
       `DELETE FROM book WHERE id = ?`,
