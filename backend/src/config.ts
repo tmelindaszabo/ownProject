@@ -4,6 +4,8 @@ dotenv.config();
 
 export const expireDayForReadersCard: number = 30;
 
+export const expireDayForBorrowing: number = 14;
+
 export default {
   mysql: {
     host: process.env.MYSQL_HOST,

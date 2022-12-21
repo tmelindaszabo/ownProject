@@ -3,6 +3,6 @@ export default interface IRegistrationRequest {
   username: string;
   email: string;
   password: string;
-  expDateOfReadersCard: number;
+  expDateOfReadersCard: string;
   isAdmin: number;
 }
