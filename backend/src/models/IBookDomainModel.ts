@@ -6,4 +6,5 @@ export interface IBookDomainModel {
   ISBN: number;
   description: string;
   numOfAllBook: number;
+  numOfAvailableBooks: number;
 }
