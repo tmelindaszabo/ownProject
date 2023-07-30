@@ -76,9 +76,19 @@ export const borrowingController = {
   },
 
   async bookDischarging(req: Request, res: Response, next: NextFunction) {
-    const bookId = req.params.id;
+    const { bookId } = req.params;
     //const authHeader = req.headers.authorization as string;
     //const userId: number = jwtService.getUserIdFromToken(authHeader);
-    //const userId: number = 2;
+    const userId: number = 2;
+    await borrowingService
+      .bookDischarging(`${userId}`, bookId)
+      .then((data) => {
+        return res.json(data);
+      })
+      .catch((err) => {
+        console.log(err);
+        next(err);
+        return;
+      });
   },
 };

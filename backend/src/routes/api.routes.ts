@@ -22,5 +22,6 @@ apiRouter.delete('/book/:id', bookController.deleteBookById);
 //borrowing
 apiRouter.post('/borrowing', borrowingController.newBorrow);
 apiRouter.put('/renewBorrowing', borrowingController.renewBorrowing);
+apiRouter.get('/discharge/:bookId', borrowingController.bookDischarging);
 
 export default apiRouter;
