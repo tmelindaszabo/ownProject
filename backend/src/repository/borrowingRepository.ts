@@ -2,6 +2,8 @@ import { db } from '../data/connection';
 import { IBorrowDataModel } from '../models/IBorrowDataModel';
 import { IBorrowedBook } from '../models/IBorrowedBook';
 import { IDbResultDataModel } from '../models/IDbResultDataModel';
+import { IExpiredBook } from '../models/IExpiredBook';
+import { IReturnedBook } from '../models/IReturnedBook';
 
 export const borrowingRepository = {
   async bookBorrowing(bookForBorrowing: IBorrowDataModel): Promise<number> {
@@ -25,16 +27,35 @@ export const borrowingRepository = {
       [id, `${now}`]
     );
     if (!book[0]) {
-      return -1;
-    }
-    if (parseInt(book[0].bookId) < 1) {
-      console.log('parseInt(book[0].bookId)', parseInt(book[0].bookId));
+      console.log('it returns with -1');
       return 0;
     }
+
     const renewedBorrowing = await db.query<IDbResultDataModel>(
       `UPDATE borrowing SET isBorrowRenewed = 1 WHERE bookId = ?`,
       [id]
     );
     return renewedBorrowing.affectedRows;
+  },
+
+  async borrowingIsExpired(userId: string, bookId: string): Promise<number> {
+    const now = new Date().toISOString().split('T')[0];
+    const isExpired = await db.query<IExpiredBook[]>(
+      `SELECT * FROM borrowing WHERE userId =? AND bookId = ? AND expireDate < ?`,
+      [userId, bookId, `${now}`]
+    );
+    if (isExpired[0]) {
+      console.log('The borrowing is expired');
+      return 1;
+    }
+    return 0;
+  },
+
+  async bookDischarging(userId: string, bookId: string): Promise<number> {
+    const dischargedBook = await db.query<IReturnedBook>(
+      `UPDATE borrowing SET isBookReturned = 1 WHERE userId = ? AND bookId = ?`,
+      [userId, bookId]
+    );
+    return dischargedBook.id;
   },
 };
