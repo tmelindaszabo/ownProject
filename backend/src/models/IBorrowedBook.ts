@@ -4,6 +4,6 @@ export interface IBorrowedBook {
   bookId: string;
   borrowDate: number;
   expireDate: number;
-  isBorrowRenew: number;
+  isBorrowRenewed: number;
   isBookReturned: number;
 }

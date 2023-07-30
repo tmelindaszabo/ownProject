@@ -18,12 +18,17 @@ export const borrowingController = {
 
     function getBorrowingDate(): string {
       let now = new Date();
+      console.log('now: ', now);
       return now.toISOString().slice(0, 10);
     }
 
     function generateExpDateForBorrowing(): string {
       let now = new Date();
       now.setDate(now.getDate() + expireDayForBorrowing);
+      console.log(
+        'generateExpDateForBorrowing: ',
+        now.toISOString().slice(0, 10)
+      );
       return now.toISOString().slice(0, 10);
     }
 
@@ -50,13 +55,14 @@ export const borrowingController = {
     // const bookForRenewBorrowing = {
     //     ...req.body
     // }
-    const { id } = req.params;
+    const { bookId } = <{ bookId: string }>req.query;
+    console.log(req.query, bookId);
     //const authHeader = req.headers.authorization as string;
     //const userId: number = jwtService.getUserIdFromToken(authHeader);
     //const userId: number = 2;
 
     await borrowingService
-      .renewBorrowing(id)
+      .renewBorrowing(bookId)
       .then(() => {
         return res.json({
           message: 'Renewing was successful.',
@@ -67,5 +73,12 @@ export const borrowingController = {
         next(err);
         return;
       });
+  },
+
+  async bookDischarging(req: Request, res: Response, next: NextFunction) {
+    const bookId = req.params.id;
+    //const authHeader = req.headers.authorization as string;
+    //const userId: number = jwtService.getUserIdFromToken(authHeader);
+    //const userId: number = 2;
   },
 };
