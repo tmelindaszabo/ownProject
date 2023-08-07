@@ -10,9 +10,10 @@ export const userController = {
     res: Response,
     next: NextFunction
   ) {
-    function generateExpDateForReadersCard(): number {
+    function generateExpDateForReadersCard(): string {
       let now = new Date();
-      return now.setDate(now.getDate() + expireDayForReadersCard);
+      now.setDate(now.getDate() + expireDayForReadersCard);
+      return now.toISOString().slice(0, 10);
     }
 
     const newRegistration: IRegistrationRequest = {
