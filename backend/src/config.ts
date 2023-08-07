@@ -6,6 +6,8 @@ export const expireDayForReadersCard: number = 30;
 
 export const expireDayForBorrowing: number = 14;
 
+export const expireTimeIn: string = '7d';
+
 export default {
   mysql: {
     host: process.env.MYSQL_HOST,

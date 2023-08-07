@@ -1,3 +1,4 @@
 export interface IRenewBorrowingRequest {
-  id: number;
+  bookId: string;
+  renewedExpireDate: string;
 }
