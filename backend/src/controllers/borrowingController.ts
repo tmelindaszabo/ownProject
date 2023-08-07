@@ -4,6 +4,14 @@ import { IBorrowDataModel } from '../models/IBorrowDataModel';
 import { IBorrowRequest } from '../models/IBorrowRequest';
 import { borrowingService } from '../services/borrowingService';
 import { jwtService } from '../services/JwtService';
+import { IRenewBorrowingRequest } from '../models/IRenewBorrowingRequest';
+
+function generateExpDateForBorrowing(): string {
+  let now = new Date();
+  now.setDate(now.getDate() + expireDayForBorrowing);
+  console.log('generateExpDateForBorrowing: ', now.toISOString().slice(0, 10));
+  return now.toISOString().slice(0, 10);
+}
 
 export const borrowingController = {
   async newBorrow(req: Request, res: Response, next: NextFunction) {
@@ -19,16 +27,6 @@ export const borrowingController = {
     function getBorrowingDate(): string {
       let now = new Date();
       console.log('now: ', now);
-      return now.toISOString().slice(0, 10);
-    }
-
-    function generateExpDateForBorrowing(): string {
-      let now = new Date();
-      now.setDate(now.getDate() + expireDayForBorrowing);
-      console.log(
-        'generateExpDateForBorrowing: ',
-        now.toISOString().slice(0, 10)
-      );
       return now.toISOString().slice(0, 10);
     }
 
@@ -61,8 +59,12 @@ export const borrowingController = {
     //const userId: number = jwtService.getUserIdFromToken(authHeader);
     //const userId: number = 2;
 
+    const renewedBook: IRenewBorrowingRequest = {
+      bookId: bookId,
+      renewedExpireDate: generateExpDateForBorrowing(),
+    };
     await borrowingService
-      .renewBorrowing(bookId)
+      .renewBorrowing(renewedBook)
       .then(() => {
         return res.json({
           message: 'Renewing was successful.',
