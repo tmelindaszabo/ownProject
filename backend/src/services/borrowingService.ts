@@ -1,6 +1,7 @@
 import { db } from '../data/connection';
 import { IBookDomainModel } from '../models/IBookDomainModel';
 import { IBorrowDataModel } from '../models/IBorrowDataModel';
+import { IRenewBorrowingRequest } from '../models/IRenewBorrowingRequest';
 import { bookRepository } from '../repository/bookRepository';
 import { borrowingRepository } from '../repository/borrowingRepository';
 
@@ -30,12 +31,12 @@ export const borrowingService = {
     return await borrowingRepository.bookBorrowing(book);
   },
 
-  async renewBorrowing(bookId: string): Promise<number> {
+  async renewBorrowing(renewedBook: IRenewBorrowingRequest): Promise<number> {
     const renewedBorrowing: number = await borrowingRepository.renewBorrowing(
-      bookId
+      renewedBook
     );
     console.log(renewedBorrowing);
-    if (renewedBorrowing === 0) {
+    if (renewedBorrowing === -1) {
       return Promise.reject({
         status: 400,
         message: 'This book cannot be renewed.',
@@ -45,16 +46,25 @@ export const borrowingService = {
   },
 
   async bookDischarging(userId: string, bookId: string): Promise<number> {
-    const expired = await borrowingRepository.borrowingIsExpired(
+    const isExpired: boolean = await borrowingRepository.borrowingIsExpired(
       userId,
       bookId
     );
-    if (expired) {
+    if (isExpired) {
       return Promise.reject({
         status: 400,
-        message: 'The borrowing is expired.',
+        message:
+          'The borrowing is expired. Discharge your expired borrowings immediately!',
       });
     }
     return await borrowingRepository.bookDischarging(userId, bookId);
+  },
+
+  async payFee(userId: string, bookId: string): Promise<any> {
+    const isExpired: boolean = await borrowingRepository.borrowingIsExpired(
+      userId,
+      bookId
+    );
+    if (isExpired) 'Discharge your expired borrowings immediately!';
   },
 };
